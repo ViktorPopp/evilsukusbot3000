@@ -20,8 +20,8 @@ var hex_cache [32]byte
 var we_are_happy = false
 var we_have_printed = false
 
-const guthib_url = "https://api.github.com/users/viktorpopp/repos"
-const pattern = "(?i)test"
+const guthib_url = "https://api.github.com/users/sukus21/repos"
+const pattern = "(?i)spin"
 
 type GitHubRepo struct {
 	Name string `json:"name"`
@@ -52,6 +52,16 @@ func main() {
 
 	c := cron.New()
 	_, err = c.AddFunc("@every 5s", cronJob)
+	if err != nil {
+		fmt.Println("Error scheduling cron job:", err)
+		return
+	}
+	_, err = c.AddFunc("@every 5s", func() {
+		if we_are_happy && !we_have_printed {
+			discord.ChannelMessageSend("1445386351225602150", "SUKUS RELASED SPIN!!!")
+			we_have_printed = true
+		}
+	})
 	if err != nil {
 		fmt.Println("Error scheduling cron job:", err)
 		return
@@ -116,13 +126,4 @@ func fetchGitHubRepos() ([]string, error) {
 	return repoNames, nil
 }
 
-func discordEventHandler(discord *discordgo.Session, message *discordgo.MessageCreate) {
-	if message.Author.ID == discord.State.User.ID {
-		return
-	}
-
-	if we_are_happy && !we_have_printed {
-		discord.ChannelMessageSend(message.ChannelID, "SUKUS RELASED SPIN!!!")
-		we_have_printed = true
-	}
-}
+func discordEventHandler(discord *discordgo.Session, message *discordgo.MessageCreate) {}
