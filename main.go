@@ -51,12 +51,12 @@ func main() {
 	}
 
 	c := cron.New()
-	_, err = c.AddFunc("@every 5s", cronJob)
+	_, err = c.AddFunc("@every 5m", cronJob)
 	if err != nil {
 		fmt.Println("Error scheduling cron job:", err)
 		return
 	}
-	_, err = c.AddFunc("@every 5s", func() {
+	_, err = c.AddFunc("@every 1m", func() {
 		if we_are_happy && !we_have_printed {
 			discord.ChannelMessageSend("1445386351225602150", "SUKUS RELASED SPIN!!!")
 			we_have_printed = true
